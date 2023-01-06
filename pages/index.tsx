@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { css } from '@emotion/react'
 
 export default function Home() {
   // const [products, setProducts] = useState<
@@ -38,6 +39,15 @@ export default function Home() {
       <h1>Hello world</h1>
       <input type="text" ref={inputRef} placeholder="input item" />
       <button onClick={handleClick}>Add item</button>
+      <button
+        css={css`
+          background-color: hotpink;
+          padding: 16px;
+          border-radius: 8px;
+        `}
+      >
+        Add Jacket
+      </button>
       <div>
         <p>Product List</p>
         {/* {products &&
