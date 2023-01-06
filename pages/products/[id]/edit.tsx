@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/legacy/image'
 import Carousel from 'nuka-carousel'
 import CustomEditor from '@components/Editor'
+import { useRouter } from 'next/router'
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 
 const images = [
   {
@@ -21,9 +23,56 @@ const images = [
 const EditProductPage = () => {
   const [imageIndex, setImageIndex] = useState<number>(0)
 
+  const router = useRouter()
+
+  const { id: productId } = router.query
+
+  const [editorState, setEditorState] = useState<EditorState | undefined>(
+    undefined
+  )
+
+  const handleSave = () => {
+    if (editorState) {
+      fetch('/api/update-product', {
+        method: 'POST',
+        body: JSON.stringify({
+          id: productId,
+          contents: JSON.stringify(
+            convertToRaw(editorState.getCurrentContent())
+          ),
+        }),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          alert('Success')
+        })
+    }
+  }
+
   const clickThumbnailImageHandler = (index: number) => {
     setImageIndex(index)
   }
+
+  useEffect(() => {
+    if (productId != null) {
+      console.log('productId', productId)
+      fetch(`/api/get-product?id=${productId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+
+          if (data.item?.contents) {
+            setEditorState(
+              EditorState.createWithContent(
+                convertFromRaw(JSON.parse(data.item.contents))
+              )
+            )
+          } else {
+            setEditorState(EditorState.createEmpty())
+          }
+        })
+    }
+  }, [productId])
   return (
     <>
       <Carousel
@@ -52,7 +101,13 @@ const EditProductPage = () => {
           </div>
         ))}
       </div>
-      <CustomEditor />
+      {editorState != null && (
+        <CustomEditor
+          editorState={editorState}
+          onEditorStateChange={setEditorState}
+          onSave={handleSave}
+        />
+      )}
     </>
   )
 }
