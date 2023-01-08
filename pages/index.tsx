@@ -2,9 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/react'
 
 export default function Home() {
-  // const [products, setProducts] = useState<
-  //   { id: string; properties: { id: string }[] }[]
-  // >([])
   const [products, setProducts] = useState<
     { id: string; name: string; createdAt: string }[]
   >([])
@@ -19,12 +16,6 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => alert(data.message))
   }
-
-  // useEffect(() => {
-  //   fetch('/api/get-items')
-  //     .then((res) => res.json())
-  //     .then((data) => setProducts(data.items))
-  // }, [])
 
   useEffect(() => {
     fetch('/api/get-products')

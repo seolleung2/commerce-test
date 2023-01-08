@@ -4,13 +4,13 @@ const prisma = new PrismaClient()
 
 const productData: Prisma.productsCreateInput[] = Array.apply(
   null,
-  Array(100)
+  Array(7)
 ).map((_, index) => ({
-  name: `Dark Jean ${index + 1}`,
-  contents: `{"blocks":[{"key":"4usau","text":"This is Dark Jean ${
+  name: `Green Hoodie ${index + 1}`,
+  contents: `{"blocks":[{"key":"4usau","text":"This is Green Hoodie ${
     index + 1
   }. Nice","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":19,"length":4,"style":"BOLD"}],"entityRanges":[],"data":{}}],"entityMap":{}}`,
-  category_id: 1,
+  category_id: 5,
   image_url: `https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/${
     (index + 1) % 10 === 0 ? 10 : (index + 1) % 10
   }.jpg`,
@@ -18,7 +18,7 @@ const productData: Prisma.productsCreateInput[] = Array.apply(
 }))
 
 async function main() {
-  await prisma.products.deleteMany({})
+  //   await prisma.products.deleteMany({})
 
   for (const p of productData) {
     const product = await prisma.products.create({
